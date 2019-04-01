@@ -11,6 +11,7 @@ class dvd{
 	bool available;
  public:
 	dvd(int serial_number, string title, bool available);
+	dvd();
 	void print();
 };
 #endif // DVD_H ///:~
