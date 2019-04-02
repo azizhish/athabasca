@@ -11,7 +11,9 @@ dvd::dvd(int s_num, string mov_title, bool avail){
 }
 
 dvd::dvd(){
-
+	serial_number = 0;
+	title = "";
+	available = false;
 }
 
 void dvd::print(){
@@ -27,47 +29,57 @@ void dvd::print(){
 	<< availability << endl;
 }
 
-int main(int argc, char const *argv[])
-{
-	string str = "123 Seven true";
-	string delimit = " ";
-	string token = str.substr(0, str.find(delimit));
-	cout << token << endl;
-	//dvd shop_list[3] = {{23, "Hellboy", true}, {22, "goldeneye", true}, {24, "fargo", false}};
-	dvd list[1];
-	// list[0].print();
-	// ifstream in("readlines.txt"); //File stream to read from the input file
-	// string line;
-	// while (getline(in, line)){
-	// 	;
-	// }
-	int pos = 0;
-	while ((pos = str.find(delimit)) != string::npos) {
-	    token = str.substr(0, pos);
-	    cout << token << endl;
-	    str.erase(0, pos + 1);
-	}
-	cout << str << endl;
-
-
-	return 0;
+void dvd::set_attributes(string num, string name, string avail){
+	serial_number = stoi(num);
+	title = name;
+	if (avail =="true") 
+		available = true;
 }
 
+void dvd::parse_set(string line, const int line_number){
+	int count = 0, pos = 0;
+	string delimit = "*";
+	string token, ser, name, avail = "";
+	while ((pos = line.find(delimit)) != string::npos) {
+	   	token = line.substr(0, pos);
+	   	switch (count){
+	   		case 0:
+	   			ser = token;
+	   			break;
+	   		case 1:
+	   			name = token;
+	   			break;
+	   		case 2:
+	   			avail = token;
+				set_attributes(ser, name, avail);
+				cout << "Too many arguments in line " << line_number + 1 
+				<< " of input file" << endl;
+	   			return;
+	   	}
+	   	// cout << token << endl;
+	   	line.erase(0, pos + 1);
+	   	count++;
+	}
+	avail = line;
+	set_attributes(ser, name, avail);
+}
 
-// std::string s = "scott>=tiger>=mushroom";
-// std::string delimiter = ">=";
-
-// size_t pos = 0;
-// std::string token;
-// while ((pos = s.find(delimiter)) != std::string::npos) {
-//     token = s.substr(0, pos);
-//     std::cout << token << std::endl;
-//     s.erase(0, pos + delimiter.length());
-// }
-// std::cout << s << std::endl;
-
-
-
+int main(int argc, char const *argv[])
+{
+	dvd list[10];
+	ifstream in("readdvd.txt");
+	dvd test;
+	string line, token;	
+	int pos = 0, index = 0;
+	while (getline(in,line) && index < 10){
+		list[index].parse_set(line, index);
+		index++;
+	}
+	for (int i = 0; i < index; i++){
+		list[i].print();
+	}
+	return 0;
+}
 
 
 
