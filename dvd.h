@@ -5,7 +5,7 @@ using namespace std;
 #ifndef DVD_H
 #define DVD_H
 
-class dvd{
+class DVD{
 	int serial_number;
 	string title;
 	bool available;
